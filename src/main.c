@@ -111,62 +111,107 @@ struct map{
     Uint32 * color;
     char* text[48];
 };
-int play_map1(SDL_Renderer *sdlRenderer ,struct map m){
-    m.x = (int*)malloc(48 * sizeof(int));
-    m.y = (int*)malloc(48 * sizeof(int));
-    //m.text[2] = (char*)malloc(48 * sizeof(char));
-    m.color = (Uint32*)malloc(48 * sizeof(Uint32));
-    Uint32 color2 , color = 0xffffffff;
+int play_map1(SDL_Renderer *sdlRenderer ,SDL_Texture *sdlTexture , struct map map){
+    SDL_Rect texture_rect = {.x=0, .y=0, .w=SCREEN_WIDTH, .h=SCREEN_HEIGHT};
+    SDL_Texture *castels[2] ;
+    castels[0] = getImageTexture(sdlRenderer, "../pink castel.bmp");
+    castels[1] = getImageTexture(sdlRenderer, "../red castel.bmp");
+    SDL_Rect pos[48];
+    map.x = (int*)malloc(48 * sizeof(int));
+    map.y = (int*)malloc(48 * sizeof(int));
+    map.color = (Uint32*)malloc(48 * sizeof(Uint32));
+    Uint32 color2 , color ;
     for(int i=0; i<48; i++) {
-        m.text[i]=malloc(2 * sizeof(char));
-        strcpy(m.text[i],"00");
+        map.text[i]=malloc(2 * sizeof(char));
         if(i/8==0 || i/8==5){
-            color2 = 0xff00ffff;//yellow
+            color2 = 0xff00ffff;//yellow : خالی
         }
         else if(i/8==1){
-            color2 = 0xff0000ff;//red
+            color2 = 0xff0000ff;//red : حریف
+            strcpy(map.text[i],"10");
+            //castels[i] = SDL_LoadBMP("../red castel.bmp");
+                    //getImageTexture(sdlRenderer, "../red castel.bmp");
         }
         else if(i/8==4){
-            color2 = 0xffff00ff;//pink
+            color2 = 0xffff00ff;//pink : ما
+            strcpy(map.text[i],"20");
+            //castels[i] = SDL_LoadBMP("../pink castel.bmp");
+                    //getImageTexture(sdlRenderer, "../pink castel.bmp");
         }
         else{
-            color2 = 0xfffff0ff;//white
+            color2 = 0xffffffff;//white : بی طرف
+            strcpy(map.text[i],"10");
         }
-        m.color[i] = color2;
-        m.x[i] = 40 + (i % 8) * 80;
-        m.y[i] = 40 + (i / 8) * 80;
+        map.color[i] = color2;
+        map.x[i] = 40 + (i % 8) * 80;
+        map.y[i] = 40 + (i / 8) * 80;
+        pos[i].x = map.x[i]-20 ;
+        pos[i].y = map.y[i]-20;
+        pos[i].h = 40;
+        pos[i].w = 40;
     }
-
+    int x,y,t=0;
     bool running = true;
     while(running){
-        //SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0xff, 0xff, 0xff);
-        //SDL_RenderClear(sdlRenderer);
+        SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0xff, 0xff, 0xff);
+        SDL_RenderClear(sdlRenderer);
+        SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
         SDL_Event sdlEvent;
         while (SDL_PollEvent(&sdlEvent)) {
             switch (sdlEvent.type) {
                 case SDL_QUIT:
                     running = false;
-                    printf(" ha ");
+                    //free-----------
                     return 0;
                     break;
+                case SDL_MOUSEBUTTONDOWN:
+                    x = sdlEvent.button.x;
+                    y = sdlEvent.button.y;
+                    int m = 8*ceil(y/80) + ceil(x/80);
+                    if(m>=8 && m<40){
+                        printf(" %d %d %d\n",x,y,m);
+                        SDL_Rect outlineRect = {map.x[m]-40, map.y[m]-40, 80, 80 };
+                        SDL_SetRenderDrawColor( sdlRenderer, 0x00, 0xFF, 0x00, 0xFF );
+                        SDL_RenderDrawRect( sdlRenderer, &outlineRect );
+                    }
             }
         }
         for(int i=0; i<48; i++){
-            if(m.text[i][0]>='9'){
+//            if(t%5 == 0){
+//                printf("%d\n",t);
+                if(map.text[i][0]<'9' && map.color[i]!=0xffffffff){
+                    if(map.text[i][1]>='9'){
+                        map.text[i][1] = '0';
+                        map.text[i][0]++;
+                    }
+                    else{
+                        map.text[i][1]++;
+                    }
+                }
+//                t = 1;
+//            }
 
+            // areas
+            filledCircleColor(sdlRenderer, map.x[i], map.y[i], 40, map.color[i]);
+            // icons
+            if(map.color[i]==0xffff00ff)
+                SDL_RenderCopy(sdlRenderer, castels[0], NULL, &pos[i]);
+            else if(map.color[i] == 0xff0000ff)
+                SDL_RenderCopy(sdlRenderer, castels[1], NULL, &pos[i]);
+            // numbers
+            if (map.color[i]==0xffffffff){
+                color = 0xff0000ff;//red
+                stringColor(sdlRenderer,map.x[i]-5,map.y[i]+22,map.text[i],color);
             }
-            else if(m.text[i][1]>='9'){
-                m.text[i][1] = '0';
-                m.text[i][0]++;
+            else if(map.color[i]!=0xff00ffff ){
+                color = 0xffffffff;//white
+                stringColor(sdlRenderer,map.x[i]-5,map.y[i]+22,map.text[i],color);
             }
-            else{
-                m.text[i][1]++;
-            }
-            filledCircleColor(sdlRenderer, m.x[i], m.y[i], 40, m.color[i]);
-            stringColor(sdlRenderer,m.x[i],m.y[i],m.text[i],color);
+
         }
+        
         SDL_RenderPresent(sdlRenderer);
-        SDL_Delay(1000/FPS);
+        SDL_Delay(1000);
     }
 }
 
@@ -195,12 +240,15 @@ int main() {
         else if(map1){
             struct map m;
 //            play_map1(sdlRenderer,m);
-            switch (play_map1(sdlRenderer,m)) {
+            switch (play_map1(sdlRenderer,sdlTexture,m)) {
                 case 0:
                     shallExit = SDL_TRUE;
                     break;
             }
-            printf("sdsds");
+//            for(int i=0; i<48; i++){
+//                free(m.color[i]);
+//            }
+//            printf("sdsds");
         }
         else if(mapmenu){
             switch(showmenu(sdlRenderer,MapLable)){
