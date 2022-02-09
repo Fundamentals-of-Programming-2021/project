@@ -1,6 +1,6 @@
 
 #------------------
-set(SOURCE src/main.c src/init.h src/init.c src/getImage.c src/getImage.h src/menu.c src/menu.h)
+set(SOURCE src/main.c src/init.h src/init.c src/getImage.c src/getImage.h src/menu.c src/menu.h src/AddNewPlayer.c src/AddNewPlayer.h)
 set(PROJECT_NAME untitled1)
 
 cmake_minimum_required(VERSION 3.0)
