@@ -1,5 +1,3 @@
-
-
 #ifndef UNTITLED1_MENU_H
 #define UNTITLED1_MENU_H
 const int SCREEN_WIDTH ;

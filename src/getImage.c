@@ -10,7 +10,6 @@
 SDL_Texture *getImageTexture(SDL_Renderer *sdlRenderer, char *image_path) {
     SDL_Surface *image = SDL_LoadBMP(image_path);
 
-    // Let the user know if the file failed to load
     if (!image) {
         printf("Failed to load image at %s: %s\n", image_path, SDL_GetError());
         return 0;

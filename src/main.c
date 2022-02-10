@@ -12,6 +12,7 @@
 #include "getImage.h"
 #include "menu.h"
 #include "AddNewPlayer.h"
+#include "score.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -141,7 +142,8 @@ int play_map1(SDL_Renderer *sdlRenderer ,SDL_Texture *sdlTexture , struct map ma
         }
         for(int i=0; i<48; i++){
             if(t%60==0){
-                
+                if(i==47)
+                    t=1;
                 if(map.grow[i]==1){
                     if(map.text[i][0]<'9'){
                         if(map.text[i][1]>='9'){
@@ -194,7 +196,7 @@ int main() {
     SDL_Texture *sdlTexture = getImageTexture(sdlRenderer, "../im1.bmp");
     SDL_Rect texture_rect = {.x=0, .y=0, .w=SCREEN_WIDTH, .h=SCREEN_HEIGHT};
 
-    bool start = true , menu = false , mapmenu = false , map1 = false;
+    bool start = true , menu = false , mapmenu = false , map1 = false , scoreBoard = false;
     text = malloc(200);
     *text = 0;
     int score = 0;
@@ -252,12 +254,16 @@ int main() {
                     mapmenu = true;
                     break;
                 case 2:
+                    scoreBoard = true;
                     menu = false;
                     break;
                 case 3:
                     menu = false;
                     break;
             }
+        }
+        else if(scoreBoard){
+            showScore(sdlRenderer);
         }
         else{
             Uint32 color = 0xffffffff;
@@ -279,7 +285,7 @@ int main() {
                         } else {
                             strcat(text, sdlEvent.text.text);
                         }
-                    printf("%s",sdlEvent.text.text);
+                    //printf("%s",sdlEvent.text.text);
                     break;
                 /*case SDL_TEXTEDITING:
 //                  Update the composition text.
@@ -305,7 +311,7 @@ int main() {
     SDL_DestroyWindow(sdlWindow);
 
     printf("%s\n",text);
-    score = 8;
+    //score = 1;
     add_new_player(text,score);
     printf("hello\n");
     free(text);

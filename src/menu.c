@@ -23,7 +23,6 @@ int showmenu(SDL_Renderer *sdlRenderer , char* lables[3]){
             switch (sdlEvent.type) {
                 case SDL_QUIT:
                     running = false;
-                    printf(" ha ");
                     return 0;
                     break;
                 case SDL_MOUSEMOTION:

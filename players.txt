@@ -1,7 +1,3 @@
-zahra 10
+mona 13
 jack 7
-mona 6
-monene 3 
 
- 
- 
