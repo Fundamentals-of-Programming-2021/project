@@ -123,7 +123,12 @@ int play_map1(SDL_Renderer *sdlRenderer ,SDL_Texture *sdlTexture){
             switch (sdlEvent.type) {
                 case SDL_QUIT:
                     running = false;
-                    //free-----------
+                    for(int i=0; i<5; i++){
+                        SDL_DestroyTexture(potion.type[i]);
+                    }
+                    for(int i=0; i<2; i++){
+                        SDL_DestroyTexture(castels[i]);
+                    }
                     return 0;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
@@ -181,10 +186,9 @@ int play_map1(SDL_Renderer *sdlRenderer ,SDL_Texture *sdlTexture){
                     num[i]--;
                     struct point temp = push(&sar[i],x[i],vx[i],y[i],vy[i]);
                     int m = 8*ceil((int)(p[i].y)/80) + ceil((int)(p[i].x)/80);
-                    int n = 8*ceil(temp.y/80) + ceil(temp.x/80);
+                    int n = 8*ceil((int)temp.y/80) + ceil((int)temp.x/80);
                     printf("m=%d n=%d %d %d\n",m,n,p[i].x,p[i].y);
                     if(n==m){
-                        move[i] = 0;
                         printf("residam");
                         if(colorMap[m]==colorMap[i]){
                             num[m]++;
@@ -195,7 +199,7 @@ int play_map1(SDL_Renderer *sdlRenderer ,SDL_Texture *sdlTexture){
                     }
                     printf("*%f*\n",vy[i]);
                 }
-//                else if()
+//                else if(move[i]==1 && num[i]>0)
             }
 
             // areas

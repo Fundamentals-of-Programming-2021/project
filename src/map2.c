@@ -72,7 +72,12 @@ int play_map2(SDL_Renderer *sdlRenderer ,SDL_Texture *sdlTexture){
             switch (sdlEvent.type) {
                 case SDL_QUIT:
                     running = false;
-                    //free-----------
+                    for(int i=0; i<5; i++){
+                        SDL_DestroyTexture(potion.type[i]);
+                    }
+                    for(int i=0; i<2; i++){
+                        SDL_DestroyTexture(castels[i]);
+                    }
                     return 0;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
