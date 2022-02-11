@@ -9,15 +9,15 @@
 #include <stdbool.h>
 #include "menu.h"
 
-int showmenu(SDL_Renderer *sdlRenderer , char* lables[3]){
+int showmenu(SDL_Renderer *sdlRenderer , char*labels[3]){
     int selected[3] = {0,0,0};
     Uint32 color[2] = {0xffffffff,0xff0000ff};
     bool running = true;
     int x,y;
     while(running){
-        stringColor(sdlRenderer,SCREEN_WIDTH/2-50,SCREEN_HEIGHT/2-50,lables[0],color[selected[0]]);
-        stringColor(sdlRenderer,SCREEN_WIDTH/2-50,SCREEN_HEIGHT/2,lables[1],color[selected[1]]);
-        stringColor(sdlRenderer,SCREEN_WIDTH/2-50,SCREEN_HEIGHT/2+50,lables[2],color[selected[2]]);
+        stringColor(sdlRenderer,SCREEN_WIDTH/2-50,SCREEN_HEIGHT/2-50,labels[0],color[selected[0]]);
+        stringColor(sdlRenderer,SCREEN_WIDTH/2-50,SCREEN_HEIGHT/2,labels[1],color[selected[1]]);
+        stringColor(sdlRenderer,SCREEN_WIDTH/2-50,SCREEN_HEIGHT/2+50,labels[2],color[selected[2]]);
         SDL_Event sdlEvent;
         while (SDL_PollEvent(&sdlEvent)) {
             switch (sdlEvent.type) {

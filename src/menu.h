@@ -3,5 +3,5 @@
 const int SCREEN_WIDTH ;
 const int SCREEN_HEIGHT ;
 const int FPS ;
-int showmenu(SDL_Renderer *sdlRenderer , char* lables[3]);
+int showmenu(SDL_Renderer *sdlRenderer , char* labels[3]);
 #endif //UNTITLED1_MENU_H

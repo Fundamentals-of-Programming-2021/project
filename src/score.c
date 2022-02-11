@@ -9,8 +9,8 @@
 #include "score.h"
 int showScore(SDL_Renderer *sdlRenderer ){
     FILE *fptr;
-    char name[200];
-    char num[20];
+    char *name = (char*)malloc(200 * sizeof(char));
+    char *num = (char*)malloc(20 * sizeof(char));;
     fptr = fopen( "../players.txt","r");
     fscanf(fptr,"%s %s",name,num);
     stringColor(sdlRenderer,190,180,"The First Player:",0xffffffff);
@@ -19,4 +19,6 @@ int showScore(SDL_Renderer *sdlRenderer ){
     stringColor(sdlRenderer,190,230,"With Score:",0xffffffff);
     stringColor(sdlRenderer,400,230,num,0xffffffff);
     fclose(fptr);
+    free(name);
+    free(num);
 }
